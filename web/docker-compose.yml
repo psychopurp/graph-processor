@@ -1,0 +1,15 @@
+version: '3.0'
+services:
+  # 服务名
+  react:
+    # 指定构建镜像Dockerfile所在文件夹的路径
+    build: .
+    # 镜像名(阿里云镜像仓库地址/命名空间/仓库名)
+    image: react
+    # 设置容器开机启动和自动重启
+    restart: always
+    # 容器名
+    container_name: react
+    # 将宿主机的80端口映射到容器的8080端口
+    ports:
+      - "8877:8080"

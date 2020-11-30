@@ -3,6 +3,7 @@ package main
 import "sync"
 
 var (
+	JobsList     = []string{"显示节点度分布图", "计算聚类系数", "节点分类", "节点聚类"}
 	analyticJobs = map[string]string{
 		"显示节点度分布图": "",
 		"计算聚类系数":   "",
@@ -13,7 +14,6 @@ var (
 	StatuFail     = 2
 	rMutex        sync.RWMutex
 )
-
 
 type Task struct {
 	Name         string   `json:"name"`

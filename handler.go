@@ -1,6 +1,10 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+
+	"github.com/gin-gonic/gin"
+)
 
 type Response struct {
 	St   int         `json:"st"`
@@ -8,8 +12,26 @@ type Response struct {
 	Data interface{} `json:"data"`
 }
 
-func CreateTask(c *gin.Context) {
+type CreateTaskRequest struct {
+	Name         string   `json:"name"`
+	FilePath     string   `json:"file_path"`
+	SampleRate   float64  `json:"sample_rate"`
+	AnalyticJobs []string `json:"analytic_jobs"`
+}
 
+func CreateTask(c *gin.Context) {
+	req := new(CreateTaskRequest)
+	err := c.BindJSON(req)
+	if err != nil {
+		c.JSON(200, &Response{
+			St:  -1,
+			Msg: "参数错误",
+			Data: "",
+		})
+		return
+	}
+	log.Println(req)
+	c.JSON(200, &Response{Data: "hello"})
 }
 
 func DeleteTask(c *gin.Context) {
@@ -21,13 +43,9 @@ func GetTasks(c *gin.Context) {
 }
 
 func GetAnalyticJobs(c *gin.Context) {
-	var jobs []string
-	for k, _ := range analyticJobs {
-		jobs = append(jobs, k)
-	}
 	c.JSON(200, &Response{
 		St:   0,
 		Msg:  "",
-		Data: jobs,
+		Data: JobsList,
 	})
 }

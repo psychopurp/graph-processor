@@ -60,3 +60,7 @@ func (p *Processor) Run() {
 func (p *Processor) Close(err error) {
 	p.close <- err
 }
+
+func (p *Processor) AddTask(taskProfile *TaskProfile) {
+	p.register <- taskProfile
+}
