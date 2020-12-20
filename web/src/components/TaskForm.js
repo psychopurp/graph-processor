@@ -114,7 +114,7 @@ export const TaskForm = (props) => {
               >
                 <Select mode="multiple" placeholder="选择你的分析任务">
                   {data.map((item, index) => (
-                    <Select.Option key={index}>{item}</Select.Option>
+                    <Select.Option key={item}>{item}</Select.Option>
                   ))}
                 </Select>
               </Form.Item>

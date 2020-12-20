@@ -14,11 +14,11 @@ export const TaskCreate = (props) => {
       component={
         <Row>
           <Col span={14}>
-            {/* <TaskForm
+            <TaskForm
               onAddTask={(task) => {
                 setTasks([...tasks, task]);
               }}
-            /> */}
+            />
           </Col>
 
           <Col span={9} offset={1}>

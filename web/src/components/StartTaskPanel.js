@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { Statistic, Row, Col, Button, Divider, Card, List, Tag } from "antd";
+import {
+  Statistic,
+  Row,
+  Col,
+  Button,
+  Divider,
+  Card,
+  List,
+  Tag,
+  Spin,
+  message,
+} from "antd";
 import { useRequest } from "ahooks";
 import api from "../api";
 import qs from "qs";
@@ -9,11 +20,44 @@ export const StartTaskPanel = (props) => {
   const tasks = props.tasks;
 
   const params = { id: "admin", name: "用户" };
+  const [uploading, setUploading] = useState(false);
 
-  const { data, error, loading } = useRequest(api.post("createTask", params), {
-    throwOnError: true,
-  });
-  console.log(data, error, loading);
+  // const { data, error, loading } = useRequest(api.post("createTask", params), {
+  //   throwOnError: true,
+  // });
+  // console.log(data, error, loading);
+
+  const upLoadSingleTask = async (task) => {
+    try {
+      let formData = new FormData();
+      formData.append("file", task.file.originFileObj);
+      console.log(task);
+      let filePath = await api.post("upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      await api.post("createTask", {
+        name: task.name,
+        file_path: filePath,
+        sample_rate: task.sampleRate,
+        analytic_jobs: task.jobTypes,
+      });
+    } catch (error) {
+      message.error("文件上传失败");
+      throw new Error(error);
+    }
+  };
+
+  const uploadTasks = async () => {
+    setUploading(true);
+    for (let i = 0; i < tasks.length; ) {
+      await upLoadSingleTask(tasks[i]);
+      props.onDelete(i);
+    }
+    setUploading(false);
+    message.success("任务上传成功", 0.5);
+  };
 
   return (
     <div>
@@ -25,6 +69,7 @@ export const StartTaskPanel = (props) => {
           <Button
             type="primary"
             onClick={() => {
+              uploadTasks();
               props.onCreate(tasks);
             }}
           >
@@ -35,17 +80,19 @@ export const StartTaskPanel = (props) => {
       <Divider />
 
       <Card style={{ overflow: "auto", height: "500px" }}>
-        <List
-          itemLayout="horizontal"
-          dataSource={tasks}
-          renderItem={(item, index) => (
-            <List.Item>
-              {TaskItem(item, () => {
-                props.onDelete(index);
-              })}
-            </List.Item>
-          )}
-        />
+        <Spin tip="Uploading..." spinning={tasks.length !== 0 && uploading}>
+          <List
+            itemLayout="horizontal"
+            dataSource={tasks}
+            renderItem={(item, index) => (
+              <List.Item>
+                {TaskItem(item, () => {
+                  props.onDelete(index);
+                })}
+              </List.Item>
+            )}
+          />
+        </Spin>
       </Card>
     </div>
   );

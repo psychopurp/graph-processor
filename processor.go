@@ -6,6 +6,14 @@ import (
 	"sync"
 )
 
+var (
+	processor *Processor
+)
+
+func init() {
+	processor = NewProcessor()
+}
+
 type Processor struct {
 	ctx   context.Context
 	tasks map[string]*TaskProfile

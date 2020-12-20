@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"path"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,13 +27,21 @@ func CreateTask(c *gin.Context) {
 	err := c.BindJSON(req)
 	if err != nil {
 		c.JSON(200, &Response{
-			St:  -1,
-			Msg: "参数错误",
+			St:   -1,
+			Msg:  "参数错误",
 			Data: "",
 		})
 		return
 	}
-	log.Println(req)
+	taskProfile := NewTaskProfile(&Task{
+		Name:         req.Name,
+		TaskFile:     req.FilePath,
+		AnalyticJobs: req.AnalyticJobs,
+		SampleRate:   req.SampleRate,
+	})
+
+	log.Println(req, taskProfile)
+	processor.AddTask(taskProfile)
 	c.JSON(200, &Response{Data: "hello"})
 }
 
@@ -48,4 +59,27 @@ func GetAnalyticJobs(c *gin.Context) {
 		Msg:  "",
 		Data: JobsList,
 	})
+}
+
+func UploadFile(c *gin.Context) {
+	form, _ := c.MultipartForm()
+	files := form.File["file"]
+	dest := ""
+	for _, file := range files {
+		log.Print(file.Filename)
+		dst := path.Join("tmp/", fmt.Sprint(time.Now().Unix())+"_"+file.Filename)
+		dest = dst
+		//上传文件到指定的目录
+		err := c.SaveUploadedFile(file, dst)
+		if err != nil {
+			c.JSON(200, &Response{
+				St:   -1,
+				Msg:  "上传文件失败 " + err.Error(),
+				Data: "",
+			})
+			return
+		}
+	}
+	c.JSON(200, &Response{Data: dest})
+
 }
