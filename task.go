@@ -3,12 +3,13 @@ package main
 import "sync"
 
 var (
-	JobsList     = []string{"显示节点度分布图", "计算聚类系数", "节点分类", "节点聚类"}
+	JobsList     = []string{"显示节点度分布图", "计算聚类系数", "节点分类", "节点聚类", "链路预测"}
 	analyticJobs = map[string]string{
 		"显示节点度分布图": "",
 		"计算聚类系数":   "",
 		"节点分类":     "",
 		"节点聚类":     "",
+		"链路预测":     "",
 	}
 	StatusSuccess = 1
 	StatuFail     = 2

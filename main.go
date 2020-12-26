@@ -14,7 +14,7 @@ func main() {
 	api := r.Group("/api", CrosHandler())
 	{
 		api.POST("/upload", UploadFile)
-		api.POST("/createTask", CreateTask,CrosHandler())
+		api.POST("/createTask", CreateTask, CrosHandler())
 		api.GET("/getTasks", GetTasks)
 		api.GET("/getAnalyticjobs", GetAnalyticJobs)
 	}

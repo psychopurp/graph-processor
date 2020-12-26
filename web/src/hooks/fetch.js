@@ -24,7 +24,7 @@ export const useFetchApi = (initUrl, initData, handler) => {
     };
 
     fetch();
-  }, [handler]);
+  }, [handler,url]);
 
   return [{ data, isLoading, isError }, setUrl];
 };
