@@ -17,6 +17,7 @@ var (
 )
 
 type Task struct {
+	User         string   `json:"user"`
 	Name         string   `json:"name"`
 	TaskFile     string   `json:"task_file"`
 	AnalyticJobs []string `json:"analytic_jobs"`
@@ -27,9 +28,11 @@ type TaskProfile struct {
 	Task
 	SamplePicPath string             `json:"sample_pic_path"`
 	JobStatus     map[string]*Status `json:"job_status"`
+	JobStatusList []*Status          `json:"job_status_list"`
 }
 
 type Status struct {
+	JobName        string `json:"job_name"`
 	CurrentStatus  int    `json:"current_status"`
 	ResultFilePath string `json:"result_file_path"`
 	Reason         string `json:"reason"`
@@ -42,9 +45,17 @@ func NewTaskProfile(task *Task) *TaskProfile {
 		JobStatus:     nil,
 	}
 	jobStatus := make(map[string]*Status, 0)
+	jobStatusList := make([]*Status, 0)
 	for _, v := range task.AnalyticJobs {
 		jobStatus[v] = new(Status)
+		jobStatus[v].JobName = v
+		jobStatusList = append(jobStatusList, jobStatus[v])
 	}
 	profile.JobStatus = jobStatus
+	profile.JobStatusList = jobStatusList
 	return profile
+}
+
+func (t *Task) GetName() string {
+	return t.User + "_" + t.Name
 }

@@ -3,8 +3,18 @@ import { Panel } from "../components/Panel";
 import { Col, Row, Tabs, Card, Tag, Button, Empty, List, Progress } from "antd";
 import { Task } from "../model/task";
 import { DownloadOutlined } from "@ant-design/icons";
+import { useRequest } from "ahooks";
+import api from "../api";
+import { getTasks } from "../api/getTasks";
 
 export const TaskStatus = (props) => {
+  const { data, error, loading } = useRequest(
+    () => {
+      return getTasks();
+    },
+    { initialData: [] }
+  );
+  console.log(data);
   const tasks = props.tasks;
   //   tasks.push(
   //     new Task("test", null, ["显示节点度分布图", "显示节点度分布图"], 10)
@@ -15,11 +25,11 @@ export const TaskStatus = (props) => {
   return (
     <Panel
       component={
-        tasks.length === 0 ? (
-          <Empty />
+        !data || data.length === 0 || error ? (
+          <Empty style={{ height: "730px" }} />
         ) : (
           <Tabs>
-            {tasks.map((item, index) => (
+            {data.map((item, index) => (
               <Tabs.TabPane
                 key={index}
                 tab={item.name}
@@ -79,7 +89,7 @@ const ImagePannel = (props) => {
         }
       >
         {" "}
-        <p>image</p>
+        <p>image </p>
       </Card>
     </div>
   );
@@ -87,7 +97,7 @@ const ImagePannel = (props) => {
 
 const JobPannel = (props) => {
   const item = props.task;
-  const jobs = item.jobTypes;
+  const jobs = item.jobStatusList;
 
   return (
     <Card title="分析任务列表" hoverable style={{ height: "90%" }}>
@@ -97,7 +107,7 @@ const JobPannel = (props) => {
         renderItem={(item, index) => (
           <List.Item>
             <div style={{ width: "100%" }}>
-              <p>{item}</p>
+              <p>{item.job_name}</p>
               <Progress percent="50" size="small" status="active" />
             </div>
           </List.Item>
@@ -113,8 +123,8 @@ const JobResult = (props) => {
   return (
     <Card title="已完成任务可视化结果" hoverable style={{ height: "90%" }}>
       <Tabs tabPosition="left" style={{ height: "100%" }}>
-        {task.jobTypes.map((item, index) => (
-          <Tabs.TabPane key={index} tab={item}>
+        {task.jobStatusList.map((item, index) => (
+          <Tabs.TabPane key={index} tab={item.job_name}>
             <Row align="middle" justify="center">
               <Empty />
             </Row>

@@ -1,9 +1,8 @@
 package main
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
 func main() {
@@ -11,7 +10,7 @@ func main() {
 	r.LoadHTMLFiles("./web/build/index.html")
 	r.Static("/static", "./web/build/static")
 
-	api := r.Group("/api", CrosHandler())
+	api := r.Group("/api", CrosHandler(), JWT())
 	{
 		api.POST("/upload", UploadFile)
 		api.POST("/createTask", CreateTask, CrosHandler())
@@ -23,5 +22,7 @@ func main() {
 		c.HTML(200, "index.html", nil)
 	})
 
-	log.Fatal(r.Run(":8899"))
+	go processor.Run()
+	log.Fatal(r.Run(":8877"))
+
 }

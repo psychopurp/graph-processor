@@ -6,8 +6,8 @@ const { Header, Footer, Sider, Content } = Layout;
 export const Panel = (props) => {
   let component = props.component;
   return (
-    <Layout style={{ height: "100%" }}>
-      <Content style={{ padding: "80px 24px 24px 24px", height: "100%" }}>
+    <Layout style={{ height: "100%"}}>
+      <Content style={{ padding: "80px 24px 24px 24px", height: "100%", }}>
         <div style={content}>{component}</div>
       </Content>
     </Layout>

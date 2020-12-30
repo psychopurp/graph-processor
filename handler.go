@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"path"
 	"time"
 
@@ -33,7 +34,9 @@ func CreateTask(c *gin.Context) {
 		})
 		return
 	}
+	token := getToken(c)
 	taskProfile := NewTaskProfile(&Task{
+		User:         token,
 		Name:         req.Name,
 		TaskFile:     req.FilePath,
 		AnalyticJobs: req.AnalyticJobs,
@@ -50,6 +53,12 @@ func DeleteTask(c *gin.Context) {
 }
 
 func GetTasks(c *gin.Context) {
+	token := getToken(c)
+	c.JSON(200, &Response{
+		St:   0,
+		Msg:  "",
+		Data: hub.GetTasks(token),
+	})
 
 }
 
@@ -67,6 +76,10 @@ func UploadFile(c *gin.Context) {
 	dest := ""
 	for _, file := range files {
 		log.Print(file.Filename)
+		paths := "tmp"
+		if _, err := os.Stat(paths); os.IsNotExist(err) {
+			_ = os.Mkdir(paths, os.ModePerm)
+		}
 		dst := path.Join("tmp/", fmt.Sprint(time.Now().Unix())+"_"+file.Filename)
 		dest = dst
 		//上传文件到指定的目录
@@ -82,4 +95,8 @@ func UploadFile(c *gin.Context) {
 	}
 	c.JSON(200, &Response{Data: dest})
 
+}
+
+func getToken(c *gin.Context) string {
+	return c.GetHeader("token")
 }

@@ -1,9 +1,8 @@
 common:
 	export GIN_MODE=release
-	export statics=hello
 
 build:common
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o output/bin/main
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main
 
 build-mac:common
 	export GIN_MODE=release

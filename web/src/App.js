@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { TaskCreate } from "./pages/TaskCreate";
 import { TaskStatus } from "./pages/TaskStatus";
 import "./App.css";
+import Layout from "antd/lib/layout/layout";
 
 function App() {
   const menu = [
@@ -23,6 +24,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Layout>
         <Header menu={menu} />
 
         <Route exact path="/" render={() => <Redirect to="/task/create" />} />
@@ -40,7 +42,9 @@ function App() {
           path="/task/status"
           render={(props) => <TaskStatus tasks={tasks} />}
         />
+         </Layout>
       </div>
+     
     </Router>
   );
 }

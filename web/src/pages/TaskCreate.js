@@ -25,7 +25,7 @@ export const TaskCreate = (props) => {
             <StartTaskPanel
               tasks={tasks}
               onCreate={(tasks) => {
-                props.onCreate(tasks);
+                // props.onCreate(tasks);
                 setTasks([]);
               }}
               onDelete={(index) => {

@@ -27,7 +27,10 @@ instance.interceptors.response.use(
       message.error(response.data.msg);
       return Promise.reject(response.data.msg);
     }
-
+    console.log(instance.defaults.headers.common["token"]);
+    if (!instance.defaults.headers.common["token"]) {
+      instance.defaults.headers.common["token"] = response.headers["token"];
+    }
     return Promise.resolve(response.data.data);
   },
   function (error) {
