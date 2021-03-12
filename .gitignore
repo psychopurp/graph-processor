@@ -2,3 +2,5 @@
 /output
 .idea
 /tmp
+*.pyc
+*.jpg
