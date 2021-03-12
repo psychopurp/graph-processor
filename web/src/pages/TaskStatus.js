@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import { Panel } from "../components/Panel";
 import { Col, Row, Tabs, Card, Tag, Button, Empty, List, Progress } from "antd";
@@ -12,7 +13,7 @@ export const TaskStatus = (props) => {
     () => {
       return getTasks();
     },
-    { initialData: [] }
+    { initialData: [] },
   );
   console.log(data);
   const tasks = props.tasks;
