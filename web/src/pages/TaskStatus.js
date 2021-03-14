@@ -16,7 +16,7 @@ export const TaskStatus = (props) => {
     { initialData: [] },
   );
   console.log(data);
-  const tasks = props.tasks;
+  // const tasks = props.tasks;
   //   tasks.push(
   //     new Task("test", null, ["显示节点度分布图", "显示节点度分布图"], 10)
   //   );

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from "react";
 
 import {
@@ -30,7 +31,10 @@ export const StartTaskPanel = (props) => {
   const upLoadSingleTask = async (task) => {
     try {
       let formData = new FormData();
-      formData.append("file", task.file.originFileObj);
+      formData.append("edgeFile", task.edgeFile.originFileObj);
+      if (task.nodeFile) {
+        formData.append("nodeFile", task.nodeFile.originFileObj);
+      }
       console.log(task);
       let filePath = await api.post("upload", formData, {
         headers: {
@@ -132,10 +136,10 @@ const TaskItem = (item, onDelete) => {
         <div style={{ margin: "5px 0 5px 0" }}>
           文件:{" "}
           <span style={{ margin: "0 60px 0 0", ...spanStyle }}>
-            {item.file.name}
+            {item.edgeFile.name}
           </span>{" "}
           size:
-          <span style={spanStyle}>{fileSize(item.file.size)} KB </span>
+          <span style={spanStyle}>{fileSize(item.edgeFile.size)} KB </span>
         </div>
       </Row>
 

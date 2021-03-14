@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   Row,
   Col,
@@ -26,28 +27,45 @@ export const TaskForm = (props) => {
     labelCol: { span: 4, pull: 0 },
     wrapperCol: { span: 16, pull: 0 },
   };
-  const [fileList, setFile] = useState([]);
+  const [edgeFileList, setEdgeFile] = useState([]);
+  const [nodeFileList, setNodeFile] = useState([]);
+
   const { data, error, loading } = useRequest(
     () => {
       return api.get("getAnalyticjobs");
     },
-    { initialData: [] }
+    { initialData: [] },
   );
   // console.log(data, error, loading);
 
-  const uploadFile = {
+  const uploadEdgeFile = {
     onRemove: (file) => {
-      const index = fileList.indexOf(file);
-      fileList.splice(index, 1);
-      setFile([...fileList]);
+      const index = edgeFileList.indexOf(file);
+      edgeFileList.splice(index, 1);
+      setFile([...edgeFileList]);
     },
     action: async (file) => {
       //   console.log(file);
-      fileList.push(file);
-      setFile([...fileList]);
+      edgeFileList.push(file);
+      setEdgeFile([...edgeFileList]);
     },
     customRequest: () => {},
-    fileList: fileList,
+    fileList: edgeFileList,
+  };
+
+  const uploadNodeFile = {
+    onRemove: (file) => {
+      const index = nodeFileList.indexOf(file);
+      nodeFileList.splice(index, 1);
+      setFile([...nodeFileList]);
+    },
+    action: async (file) => {
+      //   console.log(file);
+      nodeFileList.push(file);
+      setNodeFile([...nodeFileList]);
+    },
+    customRequest: () => {},
+    fileList: nodeFileList,
   };
 
   const handleUpload = () => {};
@@ -60,7 +78,8 @@ export const TaskForm = (props) => {
 
   const initForm = () => {
     setSampleRate(30);
-    setFile([]);
+    setEdgeFile([]);
+    setNodeFile([]);
     form.setFieldsValue({ taskName: "", sampleRate: 30 });
   };
   return (
@@ -77,10 +96,12 @@ export const TaskForm = (props) => {
               onFinish={(val) => {
                 let task = new Task(
                   val.taskName,
-                  val.taskLoad.file,
+                  val.taskLoadEdge.file,
+                  val.taskLoadNode ? val.task.taskLoadNode.file : null,
                   val.jobs,
-                  val.sampleRate
+                  val.sampleRate,
                 );
+
                 initForm();
                 props.onAddTask(task);
               }}
@@ -94,12 +115,25 @@ export const TaskForm = (props) => {
               </Form.Item>
 
               <Form.Item
-                label="装载图文件"
-                name="taskLoad"
+                label="装载边文件"
+                name="taskLoadEdge"
                 rules={[{ required: true, message: "请选择分析的图文件" }]}
               >
-                <Upload {...uploadFile}>
-                  <Button disabled={fileList.length !== 0}>
+                <Upload {...uploadEdgeFile}>
+                  <Button disabled={edgeFileList.length !== 0}>
+                    <UploadOutlined />
+                    选择文件
+                  </Button>
+                </Upload>
+              </Form.Item>
+
+              <Form.Item
+                label="装载节点文件"
+                name="taskLoadNode"
+                rules={[{ required: false, message: "请选择分析的图文件" }]}
+              >
+                <Upload {...uploadNodeFile}>
+                  <Button disabled={nodeFileList.length !== 0}>
                     <UploadOutlined />
                     选择文件
                   </Button>
