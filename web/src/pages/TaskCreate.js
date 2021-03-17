@@ -4,6 +4,7 @@ import { Col, Layout, Row } from "antd";
 import { Panel } from "../components/Panel";
 import { TaskForm } from "../components/TaskForm";
 import { StartTaskPanel } from "../components/StartTaskPanel";
+import { Graph } from "../components/graph";
 
 const { Content } = Layout;
 
@@ -20,6 +21,7 @@ export const TaskCreate = (props) => {
                 setTasks([...tasks, task]);
               }}
             />
+            {/* <Graph></Graph> */}
           </Col>
 
           <Col span={9} offset={1}>

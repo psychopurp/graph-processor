@@ -42,7 +42,7 @@ export const TaskForm = (props) => {
     onRemove: (file) => {
       const index = edgeFileList.indexOf(file);
       edgeFileList.splice(index, 1);
-      setFile([...edgeFileList]);
+      setEdgeFile([...edgeFileList]);
     },
     action: async (file) => {
       //   console.log(file);
@@ -57,7 +57,7 @@ export const TaskForm = (props) => {
     onRemove: (file) => {
       const index = nodeFileList.indexOf(file);
       nodeFileList.splice(index, 1);
-      setFile([...nodeFileList]);
+      setNodeFile([...nodeFileList]);
     },
     action: async (file) => {
       //   console.log(file);
@@ -97,7 +97,7 @@ export const TaskForm = (props) => {
                 let task = new Task(
                   val.taskName,
                   val.taskLoadEdge.file,
-                  val.taskLoadNode ? val.task.taskLoadNode.file : null,
+                  val.taskLoadNode ? val.taskLoadNode.file : null,
                   val.jobs,
                   val.sampleRate,
                 );

@@ -9,6 +9,8 @@
     "ahooks": "^2.9.1",
     "antd": "^4.8.4",
     "axios": "^0.21.0",
+    "echarts": "^5.0.2",
+    "echarts-for-react": "^3.0.1",
     "http-proxy-middleware": "^1.0.6",
     "qs": "^6.9.4",
     "react": "^17.0.1",

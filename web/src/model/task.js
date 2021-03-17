@@ -12,6 +12,7 @@ export class TaskStatus {
   constructor(
     name,
     taskFilePath,
+    nodeFilePath,
     jobTypes,
     sampleRate,
     user,
@@ -25,5 +26,6 @@ export class TaskStatus {
     this.user = user;
     this.samplePicPath = samplePicPath;
     this.jobStatusList = jobStatusList;
+    this.nodeFilePath = nodeFilePath;
   }
 }

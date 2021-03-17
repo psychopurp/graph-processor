@@ -4,9 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
-	"os/signal"
 	"sync"
-	"syscall"
 )
 
 var (
@@ -26,13 +24,10 @@ type Processor struct {
 	close      chan error
 	hub        *Hub
 	lock       sync.RWMutex
-	sigChan    chan os.Signal
 }
 
 func NewProcessor() *Processor {
 	ctx := context.Background()
-	c := make(chan os.Signal)
-	signal.Notify(c, syscall.SIGINT, syscall.SIGQUIT)
 	return &Processor{
 		ctx:        ctx,
 		tasks:      make(map[string]*TaskProfile),
@@ -41,7 +36,6 @@ func NewProcessor() *Processor {
 		lock:       sync.RWMutex{},
 		hub:        hub,
 		close:      make(chan error),
-		sigChan:    c,
 	}
 }
 
@@ -51,8 +45,6 @@ func (p *Processor) Run() {
 		close(p.close)
 		close(p.unregister)
 		close(p.register)
-		signal.Stop(p.sigChan)
-		close(p.sigChan)
 		_ = os.RemoveAll("./tmp")
 	}()
 
@@ -75,9 +67,6 @@ func (p *Processor) Run() {
 			log.Print(err)
 			return
 
-		case s := <-p.sigChan:
-			log.Println("get signal shutdown ", s)
-			return
 		}
 
 	}

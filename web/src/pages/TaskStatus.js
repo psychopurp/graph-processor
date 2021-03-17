@@ -5,8 +5,15 @@ import { Col, Row, Tabs, Card, Tag, Button, Empty, List, Progress } from "antd";
 import { Task } from "../model/task";
 import { DownloadOutlined } from "@ant-design/icons";
 import { useRequest } from "ahooks";
-import api from "../api";
-import { getTasks } from "../api/getTasks";
+import {
+  getTasks,
+  getDegreeHistogram,
+  getKMeans,
+  downLoadFile,
+  downLoad,
+} from "../api/getTasks";
+import { Graph } from "../components/graph";
+import { Image } from "antd";
 
 export const TaskStatus = (props) => {
   const { data, error, loading } = useRequest(
@@ -41,11 +48,11 @@ export const TaskStatus = (props) => {
                     <ImagePannel task={item} />
                   </Col>
 
-                  <Col span={6} style={{ margin: "0 10px 0 10px" }}>
+                  {/* <Col span={6} style={{ margin: "0 10px 0 10px" }}>
                     <JobPannel task={item} />
-                  </Col>
+                  </Col> */}
 
-                  <Col span={11}>
+                  <Col span={17} style={{ margin: "0 10px 0 10px" }}>
                     <JobResult task={item} />
                   </Col>
                 </Row>
@@ -60,8 +67,9 @@ export const TaskStatus = (props) => {
 
 const ImagePannel = (props) => {
   const item = props.task;
+  console.log(item);
   return (
-    <div style={{ height: "100%" }}>
+    <div style={{ height: "100%", width: "100%" }}>
       {" "}
       <Card
         hoverable
@@ -83,6 +91,9 @@ const ImagePannel = (props) => {
               type="primary"
               shape="round"
               size="small"
+              onClick={() => {
+                downLoad(item.samplePicPath);
+              }}
             >
               导出
             </Button>
@@ -90,7 +101,15 @@ const ImagePannel = (props) => {
         }
       >
         {" "}
-        <p>image </p>
+        <div
+          style={{
+            height: "240px",
+            width: "250px",
+            // backgroundColor: "#fff000",
+          }}
+        >
+          <Graph filepath={item.samplePicPath}></Graph>
+        </div>
       </Card>
     </div>
   );
@@ -127,11 +146,52 @@ const JobResult = (props) => {
         {task.jobStatusList.map((item, index) => (
           <Tabs.TabPane key={index} tab={item.job_name}>
             <Row align="middle" justify="center">
-              <Empty />
+              {choice(item, task)}
             </Row>
           </Tabs.TabPane>
         ))}
       </Tabs>
     </Card>
   );
+};
+
+const choice = (item, task) => {
+  switch (item.job_name) {
+    case "显示节点度分布图":
+      return degree(task.samplePicPath);
+    case "计算聚类系数":
+      return degree(task.samplePicPath);
+    case "节点分类":
+      return degree(task.samplePicPath);
+    case "节点聚类":
+      return kmeans(task.samplePicPath);
+    case "链路预测":
+      return kmeans(task.samplePicPath);
+
+    default:
+      return <Empty />;
+  }
+};
+
+const degree = (sampleFilePath) => {
+  console.log(sampleFilePath);
+  const { data, error, loading } = useRequest(
+    () => {
+      return getDegreeHistogram(sampleFilePath);
+    },
+    { initialData: [] },
+  );
+
+  return <div>{!loading ? <Image width={400} src={data} /> : <Empty />}</div>;
+};
+
+const kmeans = (sampleFilePath) => {
+  const { data, error, loading } = useRequest(
+    () => {
+      return getKMeans(sampleFilePath);
+    },
+    { initialData: [] },
+  );
+
+  return <div>{!loading ? <Image width={400} src={data} /> : <Empty />}</div>;
 };
