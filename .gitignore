@@ -6,3 +6,5 @@
 *.jpg
 **/tmp
 **/func
+.DS_STORE
+settings.json

@@ -60,11 +60,14 @@ const getOptions = (data) => {
         label: {
           show: false,
         },
+        force: {
+          repulsion: 20,
+        },
         data: nodes,
         links: links,
         lineStyle: {
-          opacity: 0.9,
-          width: 0.5,
+          opacity: 0.5,
+          width: 0.3,
           curveness: 0,
         },
       },
