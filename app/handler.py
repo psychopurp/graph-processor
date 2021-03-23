@@ -124,7 +124,7 @@ def get_degree_histogram():
     qs = str(qs, "utf-8")
     G = degree_distribution.read_edge(qs)
     path = degree_distribution.degree_histogram(G, qs)
-    print(path)
+    # print(path)
     return response(0, "", "http://127.0.0.1:{}/{}".format(server.PORT, path))
 
 
@@ -135,6 +135,26 @@ def get_k_means():
     G = degree_distribution.read_edge(qs)
     path = degree_distribution.K_means_clustering(G, qs)
     return response(0, "", "http://127.0.0.1:{}/{}".format(server.PORT, path))
+
+
+@handler_print.route("/api/getCluster", methods=["GET"])
+def get_cluster():
+    qs = request.query_string
+    qs = str(qs, "utf-8")
+    processor = degree_distribution.GraphProcessor(qs)
+    data, file_path = processor.clustering(processor.G)
+
+    return response(0, "", {"path": file_path, "list": data[:1000]})
+
+
+@handler_print.route("/api/getPredictLink", methods=["GET"])
+def get_predict_link():
+    qs = request.query_string
+    qs = str(qs, "utf-8")
+    processor = degree_distribution.GraphProcessor(qs)
+    data, file_path = processor.link_predict(processor.G)
+
+    return response(0, "", {"path": file_path})
 
 
 @handler_print.route("/api/downloadSample", methods=["GET"])

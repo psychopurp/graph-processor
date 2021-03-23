@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import ReactEchartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts";
 import "echarts/lib/chart/line";
@@ -10,7 +11,7 @@ export const Graph = (props) => {
     () => {
       return getEdges(props.filepath);
     },
-    { initialData: [] },
+    { initialData: [] }
   );
 
   return (
@@ -73,4 +74,18 @@ const getOptions = (data) => {
       },
     ],
   };
+};
+
+export const GraphLinear = (options) => {
+  return (
+    <div style={{ height: "500px", width: "100%" }}>
+      {" "}
+      <ReactEchartsCore
+        echarts={echarts}
+        theme="light"
+        option={options}
+        style={{ height: "100%", width: "100%", marginTop: "0px" }}
+      />
+    </div>
+  );
 };

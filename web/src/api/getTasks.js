@@ -18,8 +18,8 @@ export async function getTasks() {
           i.sample_rate,
           i.user,
           i.sample_pic_path,
-          i.job_status_list,
-        ),
+          i.job_status_list
+        )
       );
     }
     return result;
@@ -59,6 +59,26 @@ export async function getKMeans(filename) {
   }
 }
 
+export async function getCluster(filename) {
+  try {
+    let data = await api.get("getCluster?" + filename);
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getPredictLink(filename) {
+  try {
+    let data = await api.get("getPredictLink?" + filename);
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function downLoadFile(filename) {
   try {
     await api.get("downloadSample", {
@@ -90,7 +110,7 @@ export const downLoad = async (filename) => {
     let response = await Axios.request(queryArgs);
     // 提取文件名
     const filename = response.headers["content-disposition"].match(
-      /filename=(.*)/,
+      /filename=(.*)/
     )[1];
     // 将二进制流转为blob
     const blob = new Blob([response.data], {

@@ -11,8 +11,10 @@ import {
   getKMeans,
   downLoadFile,
   downLoad,
+  getCluster,
+  getPredictLink,
 } from "../api/getTasks";
-import { Graph } from "../components/graph";
+import { Graph, GraphLinear } from "../components/graph";
 import { Image } from "antd";
 
 export const TaskStatus = (props) => {
@@ -20,7 +22,7 @@ export const TaskStatus = (props) => {
     () => {
       return getTasks();
     },
-    { initialData: [] },
+    { initialData: [] }
   );
   console.log(data);
   // const tasks = props.tasks;
@@ -160,13 +162,13 @@ const choice = (item, task) => {
     case "显示节点度分布图":
       return degree(task.samplePicPath);
     case "计算聚类系数":
-      return degree(task.samplePicPath);
+      return cluster(task.samplePicPath);
     case "节点分类":
       return degree(task.samplePicPath);
     case "节点聚类":
       return kmeans(task.samplePicPath);
     case "链路预测":
-      return kmeans(task.samplePicPath);
+      return link_predict(task.samplePicPath);
 
     default:
       return <Empty />;
@@ -179,10 +181,64 @@ const degree = (sampleFilePath) => {
     () => {
       return getDegreeHistogram(sampleFilePath);
     },
-    { initialData: [] },
+    { initialData: [] }
   );
 
   return <div>{!loading ? <Image width={400} src={data} /> : <Empty />}</div>;
+};
+
+const cluster = (sampleFilePath) => {
+  const { data, error, loading } = useRequest(
+    () => {
+      return getCluster(sampleFilePath);
+    },
+    { initialData: { list: [], path: "" } }
+  );
+  let x_data = [];
+  let y_data = [];
+  for (let i of data.list) {
+    x_data.push(i[0]);
+    y_data.push(i[1]);
+  }
+
+  let option = {
+    xAxis: {
+      type: "category",
+      data: x_data,
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: y_data,
+        type: "line",
+      },
+    ],
+  };
+
+  return (
+    <Col span={24} style={{ backgroundColor: "" }}>
+      {!loading ? (
+        <div>
+          <Button
+            icon={<DownloadOutlined />}
+            type="primary"
+            shape="round"
+            size="small"
+            onClick={() => {
+              downLoad(data.path);
+            }}
+          >
+            导出
+          </Button>
+          {GraphLinear(option)}
+        </div>
+      ) : (
+        <Empty />
+      )}
+    </Col>
+  );
 };
 
 const kmeans = (sampleFilePath) => {
@@ -190,8 +246,39 @@ const kmeans = (sampleFilePath) => {
     () => {
       return getKMeans(sampleFilePath);
     },
-    { initialData: [] },
+    { initialData: [] }
   );
 
   return <div>{!loading ? <Image width={400} src={data} /> : <Empty />}</div>;
+};
+
+const link_predict = (sampleFilePath) => {
+  const { data, error, loading } = useRequest(
+    () => {
+      return getPredictLink(sampleFilePath);
+    },
+    { initialData: { path: "" } }
+  );
+
+  return (
+    <Col span={24} style={{ backgroundColor: "" }}>
+      {!loading ? (
+        <div>
+          <Button
+            icon={<DownloadOutlined />}
+            type="primary"
+            shape="round"
+            size="small"
+            onClick={() => {
+              downLoad(data.path);
+            }}
+          >
+            导出链路预测文件
+          </Button>
+        </div>
+      ) : (
+        <Empty />
+      )}
+    </Col>
+  );
 };

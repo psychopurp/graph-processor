@@ -29,11 +29,13 @@ PORT = 8877
 
 
 def create_app():
+
     # if __name__ == "__main__":
     # t1 = Thread(target=processor, args=("thread 1",))
+
     # t1.start()
     app.run(debug=False, port=PORT)
     basepath = os.path.dirname(__file__)
     if os.path.isdir(basepath+"/tmp"):
-        # shutil.rmtree(os.path.join(os.path.dirname(__file__), "tmp"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "tmp"))
         pass
