@@ -70,8 +70,6 @@ def createTask():
     # print(t.sample_rate, sample_file)
     task_hub[token].append(task.TaskProfile(t, sample_pic_path=sample_file))
 
-    print(task_hub)
-
     return response(0, "", "hello")
 
 
@@ -85,6 +83,8 @@ def getTasks():
     task_list = task_hub.get(token)
     data_list = []
     for t in task_list:
+        if not t:
+            return response(0, "", [])
         item = {
             "name": t.task_name,
             "task_file": t.edge_file,

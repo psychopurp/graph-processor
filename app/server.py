@@ -6,19 +6,23 @@ import shutil
 
 
 # print(dir(handler), dir(__name__))
-app = Flask(__name__, static_folder="../web/build/")
+app = Flask(__name__, static_folder='../web/build/static',
+            template_folder="../web/build")
 app.register_blueprint(handler.handler_print)
 
 
-# @app.route("/", defaults={'path': ''})
-# @app.route('/<path:path>')
-# def home(path):
-#     if path != "" and os.path.exists(app.static_folder + path):
-#         return send_from_directory(app.static_folder, path)
-#     else:
-#         return send_from_directory(app.static_folder, 'index.html')
-@app.route('/tmp/<path>')
+@app.route("/", defaults={'path': '/'})
+@app.route('/<path:path>')
 def home(path):
+    if path != "" and os.path.exists(app.static_folder + path):
+        print("index...", path)
+        return render_template('index.html')
+    else:
+        return render_template('index.html')
+
+
+@app.route('/tmp/<path>')
+def home2(path):
     print(path)
     if path != "":
         print("mt")
