@@ -25,26 +25,26 @@ function App() {
     <Router>
       <div className="App">
         <Layout>
-        <Header menu={menu} />
-
-        <Route exact path="/" render={() => <Redirect to="/task/create" />} />
-        <Route
-          path="/task/create"
-          render={(props) => (
-            <TaskCreate
-              onCreate={(task) => {
-                setTasks([...task]);
-              }}
-            />
-          )}
-        />
-        <Route
-          path="/task/status"
-          render={(props) => <TaskStatus tasks={tasks} />}
-        />
-         </Layout>
+          <Header menu={menu} />
+          {/* 任务创建组件 */}
+          <Route exact path="/" render={() => <Redirect to="/task/create" />} />
+          <Route
+            path="/task/create"
+            render={(props) => (
+              <TaskCreate
+                onCreate={(task) => {
+                  setTasks([...task]);
+                }}
+              />
+            )}
+          />
+          {/* 任务状态组件 */}
+          <Route
+            path="/task/status"
+            render={(props) => <TaskStatus tasks={tasks} />}
+          />
+        </Layout>
       </div>
-     
     </Router>
   );
 }

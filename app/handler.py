@@ -81,6 +81,8 @@ def getTasks():
     if not token:
         return response(0, "", [])
     task_list = task_hub.get(token)
+    if not task_list:
+        return response(0, "", [])
     data_list = []
     for t in task_list:
         if not t:
